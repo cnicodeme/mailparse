@@ -33,6 +33,12 @@ setup(
     url='https://github.com/cnicodeme/mailparse',
     author='Cyril Nicodeme',
     author_email='contact@cnicodeme.com',
+    keywords='mail email parse parser encode decode encoder decoder eml',
+    project_urls={
+        # 'Official Website': 'https://github.com/cnicodeme/mailparse',
+        # 'Documentation': 'https://github.com/cnicodeme/mailparse',
+        'Source': 'https://github.com/cnicodeme/mailparse',
+    },
     packages=find_packages(),
     platforms='any',
 
@@ -68,12 +74,5 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: PyPy",
-    ],
-
-    keywords='mail email parse parser encode decode encoder decoder eml',
-    project_urls={
-        'Official Website': 'https://github.com/cnicodeme/mailparse',
-        'Documentation': 'https://github.com/cnicodeme/mailparse',
-        'Source': 'https://github.com/cnicodeme/mailparse',
-    },
+    ]
 )

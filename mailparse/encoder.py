@@ -10,9 +10,9 @@ from email.message import Message
 from email.encoders import encode_noop
 from email.header import Header
 from email.utils import quote, make_msgid, formataddr, formatdate
-from utils import normalize_keys, EMAIL_HEADERS
-from io import StringIO, BytesIO
 from email.generator import Generator, BytesGenerator
+from .utils import normalize_keys, EMAIL_HEADERS
+from io import StringIO, BytesIO
 
 __all__ = ('EmailEncode',)
 

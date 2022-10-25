@@ -2,12 +2,12 @@ LICENSE
 README.md
 setup.cfg
 setup.py
+mailparse/__init__.py
+mailparse/__version__.py
+mailparse/decoder.py
+mailparse/encoder.py
+mailparse/utils.py
 mailparse.egg-info/PKG-INFO
 mailparse.egg-info/SOURCES.txt
 mailparse.egg-info/dependency_links.txt
 mailparse.egg-info/top_level.txt
-src/__init__.py
-src/__version__.py
-src/decoder.py
-src/encoder.py
-src/utils.py

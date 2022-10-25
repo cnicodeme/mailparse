@@ -4,7 +4,7 @@ from email import message_from_bytes, message_from_string
 from email.utils import parseaddr, parsedate_to_datetime, formataddr, getaddresses
 from email.header import decode_header
 from email import policy
-from utils import EMAIL_HEADERS, NOT_HEADERS, SINGLE_HEADERS, normalize_keys
+from .utils import EMAIL_HEADERS, NOT_HEADERS, SINGLE_HEADERS, normalize_keys
 
 import re, datetime, base64
 

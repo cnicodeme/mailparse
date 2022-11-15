@@ -120,7 +120,7 @@ class EmailDecode(dict):
                 parts.append(self._decode_str(r[0], r[1]))
             value = ' '.join(parts)
 
-        return re.sub(r"[\ ]{1,}", ' ', value.strip()).replace('\r', '\n').replace('\n', '')
+        return re.sub(r"[\ ]{1,}", ' ', value.strip()).replace('\r', '\n').replace('\n', '').strip('"').strip("'")
 
     def _decode_str(self, value, charset=None):
         """
@@ -273,16 +273,23 @@ class EmailDecode(dict):
                 self[key].append(attachment)
 
     @classmethod
-    def load(cls, data):
+    def load(cls, data, policy=None):
+        """
+        Allows to set a custom policy. By default the policy is the default from Python's: `policy.compat32`
+        """
+        options = {}
+        if policy:
+            options = {'policy': policy}
+
         if isinstance(data, bytes):
-            mail = message_from_bytes(data, policy=policy.SMTPUTF8)
+            mail = message_from_bytes(data, **options)
         elif isinstance(data, str):
-            mail = message_from_string(data, policy=policy.SMTPUTF8)
+            mail = message_from_string(data, **options)
 
         return EmailDecode(mail)
 
     @classmethod
-    def open(cls, path):
+    def open(cls, path, policy=None):
         # We'll let Python fail in case the path is not correct
         with open(path, 'rb') as fp:
-            return cls.load(fp.read())
+            return cls.load(fp.read(), policy)

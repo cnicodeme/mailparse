@@ -207,7 +207,10 @@ class EmailDecode(dict):
         if payload.get_content_type().lower() in ('message/rfc822', 'message/delivery-status'):
             content = []
             for pl in payload.get_payload():
-                content.append(self._decode_str(bytes(pl.get_body())))
+                try:
+                    content.append(self._decode_str(bytes(pl.get_body())))
+                except AttributeError:
+                    content.append(self._decode_str(bytes(pl)))
 
             content = ''.join(content)
 
@@ -246,11 +249,7 @@ class EmailDecode(dict):
                     attachment['content'] = self._merge_multiple_payload(payload, charset, decode=False)
                 elif payload.get_content_maintype().lower() in ('text', 'message'):
                     content = self._merge_multiple_payload(payload, charset)
-
-                    if attachment['type'] != 'message/rfc822':
-                        attachment['content'] = self._decode_str(content, charset)
-                    else:
-                        attachment['content'] = self._decode_str(content, charset)
+                    attachment['content'] = self._decode_str(content, charset)
                 else:
                     attachment['content'] = base64.b64encode(self._decode_str(payload.get_payload(decode=True), charset).encode('utf-8')).decode('utf-8')
 

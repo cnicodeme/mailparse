@@ -5,7 +5,7 @@ from email.utils import parseaddr, parsedate_to_datetime, formataddr, getaddress
 from email.header import decode_header
 from email import policy
 from .utils import EMAIL_HEADERS, NOT_HEADERS, SINGLE_HEADERS, normalize_keys
-
+import html2text
 import re, datetime, base64
 
 
@@ -236,6 +236,12 @@ class EmailDecode(dict):
                 self['text'] = self._decode_str(payload.get_payload(decode=True).strip(), charset)
             elif payload.get_content_disposition() != 'attachment' and payload.get_content_type().lower() == 'text/html':
                 self['html'] = self._decode_str(payload.get_payload(decode=True).strip(), charset)
+                # Check if email is originated from iOS Apple Mail and add a text key if not present
+                if 'text' not in self and self['html'] is not None:
+                    h = html2text.HTML2Text()
+                    h.ignore_links = True
+                    text = h.handle(self['html'])
+                    self['text'] = self._decode_str(text.strip(), charset)
             else:
                 attachment = {
                     'type': payload.get_content_type(),
@@ -292,3 +298,4 @@ class EmailDecode(dict):
         # We'll let Python fail in case the path is not correct
         with open(path, 'rb') as fp:
             return cls.load(fp.read(), policy)
+        

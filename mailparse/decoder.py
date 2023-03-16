@@ -18,6 +18,8 @@ _ignore_headers = ('content-transfer-encoding', 'content-type', 'timestamp')
 class EmailDecode(dict):
     def __init__(self, email):
         self['headers'] = {}
+        self['text'] = None
+        self['html'] = None
 
         # We try to find the charset
         self.default_charset = email.get_content_charset()
@@ -102,7 +104,9 @@ class EmailDecode(dict):
                 continue
 
             if key_lower in SINGLE_HEADERS:
-                base[key] = value
+                if key not in base:
+                    # We only add the header if it is not already present
+                    base[key] = value
             else:
                 if key not in base:
                     base[key] = []

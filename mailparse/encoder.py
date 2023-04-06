@@ -150,10 +150,6 @@ class EmailEncode(object):
                 else:
                     parent[normalize_keys(header)] = self._encode_header(current)
 
-        if 'message-id' not in parent:
-            msg_id = make_msgid()
-            parent['Message-ID'] = '{0}@improvmx.com>'.format(msg_id.split('@')[0])
-
         if 'date' not in parent:
             parent['Date'] = formatdate()
 

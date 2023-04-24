@@ -1,7 +1,12 @@
+# Needed to import mailparse from parent directory
+import sys
+sys.path.insert(0, '../../')
+
+# Standard import
 from mailparse import EmailDecode
 import json
 
-decoded = EmailDecode.open('./sample.eml')
+decoded = EmailDecode.open('./sample.complete.eml')
 
 """
 It's also possible to do

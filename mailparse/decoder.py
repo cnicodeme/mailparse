@@ -254,7 +254,7 @@ class EmailDecode(dict):
                     if encoding in ('base64', 'quoted-printable', '7bit', '8bit', 'binary') or encoding.startswith('x-'):
                         attachment['encoding'] = encoding
 
-                if str(payload.get('Content-Transfer-Encoding')) == 'base64':
+                if str(payload.get('Content-Transfer-Encoding')).lower() == 'base64':
                     attachment['content'] = self._merge_multiple_payload(payload, charset, decode=False)
                 elif payload.get_content_maintype().lower() in ('text', 'message'):
                     content = self._merge_multiple_payload(payload, charset)

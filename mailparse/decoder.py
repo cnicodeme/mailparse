@@ -265,7 +265,8 @@ class EmailDecode(dict):
                 attachment['content'] = attachment['content'].strip()
 
                 key = 'attachments'
-                if payload.get_content_disposition() == 'inline' and payload.get_content_maintype().lower() == 'image' and payload.get('content-id'):
+                content_disposition = payload.get_content_disposition() or 'inline'
+                if content_disposition == 'inline' and payload.get('content-id') and payload.get_content_maintype().lower() == 'image':
                     """
                     get_content_disposition() : returns the **lowercased** value of the Content-Disposition header if any, with either "attachment", "inline" or None
                     We only consider images to be inline, so any other format is an attachment

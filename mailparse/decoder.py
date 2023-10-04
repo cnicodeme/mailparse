@@ -243,11 +243,11 @@ class EmailDecode(dict):
             else:
                 attachment = {
                     'type': payload.get_content_type(),
-                    'name': self._decode_str(payload.get_filename(), charset)
+                    'name': self._clear(payload.get_filename())
                 }
 
                 if payload.get('content-description') is not None:
-                    attachment['description'] = self._decode_str(str(payload.get('content-description')), charset)
+                    attachment['description'] = self._clear(str(payload.get('content-description')))
 
                 if payload.get('Content-Transfer-Encoding') is not None:
                     encoding = str(payload.get('Content-Transfer-Encoding')).lower()

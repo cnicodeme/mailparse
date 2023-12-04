@@ -237,9 +237,13 @@ class EmailDecode(dict):
                 self._process_payload(pl, charset)
         else:
             if payload.get_content_disposition() != 'attachment' and payload.get_content_type().lower() == 'text/plain':
-                self['text'] = self._decode_str(payload.get_payload(decode=True).strip(), charset)
+                content = self._decode_str(payload.get_payload(decode=True).strip(), charset)
+                if content:
+                    self['text'] = content
             elif payload.get_content_disposition() != 'attachment' and payload.get_content_type().lower() == 'text/html':
-                self['html'] = self._decode_str(payload.get_payload(decode=True).strip(), charset)
+                content = self._decode_str(payload.get_payload(decode=True).strip(), charset)
+                if content:
+                    self['html'] = content
             else:
                 attachment = {
                     'type': payload.get_content_type(),

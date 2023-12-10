@@ -246,9 +246,11 @@ class EmailDecode(dict):
                     self['html'] = content
             else:
                 attachment = {
-                    'type': payload.get_content_type(),
-                    'name': self._clear(payload.get_filename())
+                    'type': payload.get_content_type()
                 }
+
+                if payload.get_filename() is not None:
+                    attachment['name'] = self._clear(payload.get_filename())
 
                 if payload.get('content-description') is not None:
                     attachment['description'] = self._clear(str(payload.get('content-description')))

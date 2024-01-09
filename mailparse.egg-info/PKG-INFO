@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: mailparse
-Version: 1.0.12
+Version: 1.0.13
 Summary: Encode raw emails into Python dict objects and build raw emails from Python dict.
 Home-page: https://github.com/cnicodeme/mailparse
 Author: Cyril Nicodeme

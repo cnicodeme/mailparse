@@ -21,24 +21,24 @@ class EmailDecode(dict):
         self['html'] = None
 
         # We try to find the charset
-        self.default_charset = email.get_content_charset()
+        self.set_default_charset(email.get_content_charset())
 
         if self.default_charset is None:
             # If we haven't found it, we parse the body to find the correct one
             for c in email.get_charsets():
                 if c is not None:
-                    self.default_charset = c
+                    self.set_default_charset(c)
                     break
 
         if self.default_charset is None and 'subject' in email:
             # Finally, our last try is with the subject
             for r in decode_header(email.get('subject')):
                 if r[1] is not None:
-                    self.default_charset = r[1]
+                    self.set_default_charset(r[1])
                     break
 
         if self.default_charset:
-            self.default_charset = self.default_charset.upper().replace('HTTP-EQUIVCONTENT-TYPE', '')
+            self.set_default_charset(self.default_charset)
 
         for k in list(set(email.keys())):
             k = k.lower()
@@ -74,6 +74,17 @@ class EmailDecode(dict):
                 self['timestamp'] = int(datetime.datetime.utcnow().timestamp())
 
         self._process_payload(email)
+
+    def _parse_charset(self, charset):
+        if charset:
+            # Windows-XXXx are an alias for CPXXXx
+            # But some CPXXXx have no aliases, such as Windows-874
+            charset = charset.upper().replace('HTTP-EQUIVCONTENT-TYPE', '').replace('WINDOWS-', 'cp')
+
+        return charset
+
+    def set_default_charset(self, charset):
+        self.default_charset = self._parse_charset(charset)
 
     def _headers(self, key, values, subpart=None):
         base = self
@@ -134,7 +145,7 @@ class EmailDecode(dict):
             return None
 
         if charset:
-            charset = charset.upper().replace('HTTP-EQUIVCONTENT-TYPE', '')
+            charset = self._parse_charset(charset)
         else:
             charset = 'UTF-8'
 
@@ -206,7 +217,7 @@ class EmailDecode(dict):
         return {'name': name, 'email': email}
 
     def _merge_multiple_payload(self, payload, default_charset, decode=True):
-        charset = payload.get_content_charset() or default_charset
+        charset = self._parse_charset(payload.get_content_charset()) or default_charset
 
         if payload.get_content_type().lower() in ('message/rfc822', 'message/delivery-status'):
             content = []
@@ -230,7 +241,7 @@ class EmailDecode(dict):
         return content
 
     def _process_payload(self, payload, default_charset=None):
-        charset = payload.get_content_charset() or default_charset
+        charset = self._parse_charset(payload.get_content_charset()) or default_charset
 
         if payload.is_multipart() and payload.get_content_maintype().lower() != 'message':
             for pl in payload.get_payload():
